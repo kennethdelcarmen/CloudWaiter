@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin</title>
+  <% include ../partials/head %>
+  <style>
+    .tables, .tables tr, .tables td{border:0px;}
+  </style>
+</head>
+<body>
+  <% include ../partials/c_header %>
+  <script>
+    $(()=>{
+      $("#tabs").append("<li class='active'><a href='/admin'>Admin</a></li>")
+    });
+  </script>
+  <div class="container" style="margin-top:6%;">
+    <h1>Admin</h1>
+
+    <div class="panel-group" id="admin1">
+      <!--sliders-->
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <a data-toggle="collapse" data-parent="#admin1" href="#slider1">
+            <h3>Sliders</h3>
+          </a>
+        </div>
+        <div id="slider1" class="panel-collapse collapse">
+          <div class="panel-body">
+            <h4>Images</h4>
+            <table class="tables">
+              <tr>
+                <%
+                for(a=0;a<slider.length;a++){%>
+                  <td><img src="images/<%=slider[a].filename%>" width="30%" class="img-thumbnail"></td><%
+                }
+                %>
+              </tr>
+              <tr>
+                <%
+                for(a=0;a<slider.length;a++){%>
+                  <td><center>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rep<%=slider[a].slider_id%>">Replace Image</button></td>
+                    <div id="rep<%=slider[a].slider_id%>" class="modal fade" role="dialog">
+                  		<div class="modal-dialog">
+                  		<div class="modal-content">
+                    		<div class="modal-header">
+                    			<button type="button" class="close" data-dismiss="modal">&times;</button>
+                    			<h4 class="modal-title">Add new</h4>
+                    		</div>
+                          <div class="modal-body">
+                            <form action="/imageupload" method="POST" enctype="multipart/form-data">
+                              Slider_id:<br>
+                              <input type="text" class="form-control" value="<%=slider[a].slider_id%>" name="id" readonly><br>
+                              Image:<br>
+                              <input type="file" class="form-control" name="image" id="image" style="display:none;">
+                              <label for="image" class="btn btn-primary">Upload</label><br>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                          </form>
+                            <button type="reset" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <%
+                }
+                %>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <br>
+
+      <!--Tables-->
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <a data-toggle="collapse" data-parent="#admin1" href="#tables1">
+            <h3>Tables</h3>
+          </a>
+        </div>
+        <div id="tables1" class="panel-collapse collapse">
+          <div class="panel-body">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addtable">Add Table</button>
+            <div id="addtable" class="modal fade" role="dialog">
+          		<div class="modal-dialog">
+          		<div class="modal-content">
+            		<div class="modal-header">
+            			<button type="button" class="close" data-dismiss="modal">&times;</button>
+            			<h4 class="modal-title">Add new</h4>
+            		</div>
+                  <div class="modal-body">
+                    <form action="/tables/add" method="POST">
+                      Table_id:<br>
+                      <input type="text" class="form-control" name="id" readonly><br>
+                      Table_no:<br>
+                      <input type="text" class="form-control" name="table_no" value="<%=tables[tables.length-1].table_no+1%>" readonly><br>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                  </form>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+            <br>
+            <table class="tables">
+              <tr>
+              <%
+              if(tables.length){
+                for(b=0;b<tables.length;b++){
+                  if(b %5!=0){ %>
+                    <td>
+                      <div class="btn-group">
+                        <a class="btn btn-info disable">Table <%=tables[b].table_no%></a>
+                        <a href="#del<%=tables[b].table_id%>" data-toggle="modal" class="btn btn-danger">x</a>
+                       </div>
+                     </td>
+                    <div id="del<%=tables[b].table_id%>" class="modal fade" role="dialog">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Delete table <%=tables[b].table_no%>?</h4>
+                          </div>
+                            <form action="/tables/delete" method="POST">
+                            <input type="hidden" name="id" value="<%=tables[b].table_id%>">
+                          <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                          </form>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div><%
+                  }else{
+                    %>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="btn-group">
+                          <a class="btn btn-info disable">Table <%=tables[b].table_no%></a>
+                          <a href="#del<%=tables[b].table_id%>" data-toggle="modal" class="btn btn-danger">x</a>
+                         </div>
+                      </td>
+                      <div id="del<%=tables[b].table_id%>" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">Delete table <%=tables[b].table_no%>?</h4>
+                            </div>
+                              <form action="/tables/delete" method="POST">
+                              <input type="hidden" name="id" value="<%=tables[b].table_id%>">
+                            <div class="modal-footer">
+                              <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                              <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div><%
+                  }
+
+                }
+              } %>
+                </tr>
+              </table>
+          </div>
+        </div>
+      </div>
+      <br>
+
+      <!--Items-->
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <a data-toggle="collapse" data-parent="#admin1" href="#items1">
+            <h3>Items</h3>
+          </a>
+        </div>
+        <div id="items1" class="panel-collapse collapse">
+          <div class="panel-body">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#additem">Add item</button><br><br>
+            <div id="additem" class="modal fade" role="dialog">
+          		<div class="modal-dialog">
+          		<div class="modal-content">
+            		<div class="modal-header">
+            			<button type="button" class="close" data-dismiss="modal">&times;</button>
+            			<h4 class="modal-title">Add new</h4>
+            		</div>
+                  <div class="modal-body">
+                    <form action="/item/add" method="POST">
+                      Item_id:<br>
+                      <input type="text" class="form-control" name="id" readonly><br>
+                      Name:<br>
+                      <input type="text" class="form-control" name="name" required><br>
+                      Price(&#8369;):<br>
+                      <div class="input-group">
+                        <span class="input-group-addon">&#8369;</span>
+                        <input type="text" class="form-control" name="price" required>
+                      </div><br>
+                      Class:<br>
+                      <select class="form-control" name="class" required>
+                        <option value="">--Select class--</option>
+                        <option value="Burgers">Burgers</option>
+                        <option value="Chicken Wings">Chicken Wings</option>
+                        <option value="Rice Meals">Rice Meals</option>
+                        <option value="Sides">Sides</option>
+                        <option value="Extras">Extras</option>
+                        <option value="Drinks">Drinks</option>
+                      </select>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                  </form>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <table class="table">
+              <tr>
+                <th>Item_id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Class</th>
+                <th colspan="2">Action</th>
+              </tr>
+
+              <%
+              if(item.length){
+                for(a=0;a<item.length;a++){%>
+                  <tr>
+                    <td><%=item[a].item_id%></td>
+                    <td><%=item[a].name%></td>
+                    <td>&#8369;<%=item[a].price%></td>
+                    <td><%=item[a].class%></td>
+                    <td><a class="btn btn-primary" data-toggle="modal" data-target="#<%=item[a].item_id%>edit">Edit</a></td>
+                    <td><a class="btn btn-danger" data-toggle="modal" data-target="#<%=item[a].item_id%>delete">Delete</a></td>
+                  </tr>
+                  <div class="modal fade" id="<%=item[a].item_id%>edit">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title">Edit Item</h4>
+                        </div>
+                        <div class="modal-body">
+                          <form action="/item/edit" method="POST">
+                            Item_id:<br>
+                            <input type="text" class="form-control" name="id" value="<%=item[a].item_id%>" readonly><br>
+                            Name:<br>
+                            <input type="text" class="form-control" name="name" value="<%=item[a].name%>" required><br>
+                            Price(&#8369;):<br>
+                            <div class="input-group">
+                              <span class="input-group-addon">&#8369;</span>
+                              <input type="text" class="form-control" name="price" value="<%=item[a].price%>" required>
+                            </div>
+                            <br>
+                            Class:<br>
+                            <input type="text" class="form-control" name="class" value="<%=item[a].class%>" required><br>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-primary">Edit</button>
+                        </form>
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal fade" id="<%=item[a].item_id%>delete">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title">Delete Item</h4>
+                        </div>
+                        <div class="modal-body">
+                          <form action="/item/delete" method="POST">
+                            Delete Item <%=item[a].item_id%>?
+                            <input type="hidden" class="form-control" name="id" value="<%=item[a].item_id%>"><br>
+
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                          <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div><%
+                }
+              }%>
+              <tr>
+                <th>Item_id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Class</th>
+                <th colspan="2">Action</th>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <br>
+
+      <!--resto details-->
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <a data-toggle="collapse" data-parent="#admin1" href="#resto1">
+            <h3>Restaurant Details</h3>
+          </a>
+        </div>
+        <div id="resto1" class="panel-collapse collapse">
+          <div class="panel-body">
+            <form id="restoform" action="/resto" method="POST">
+              Restaurant Name:
+              <input type="text" class="form-control" value="<%=resto.restaurant%>" name="name" readonly><br>
+              Description:
+              <textarea class="form-control" name="decript" readonly><%=resto.description%></textarea><br>
+              Branches:<br>
+              <textarea class="form-control" name="branches" readonly><%=resto.branches%></textarea><br>
+              Official Site:
+              <input type="text" class="form-control" value="<%=resto.official_site%>" name="o_site" readonly><br>
+              Facebook Page:
+              <input type="text" class="form-control" value="<%=resto.facebook_page%>" name="fb_page" readonly><br>
+              Twitter Page:
+              <input type="text" class="form-control" value="<%=resto.twitter_page%>" name="tweet_page" readonly><br>
+          </div>
+          <div class="panel-footer">
+            <script>
+            function edit(){
+              $("#restoform").children().attr("readonly",false);
+              $("#buttons").children().attr("disabled",false);
+              $("#buttons").first().attr("disabled",true);
+            }
+
+            function reset1(){
+              $("#restoform").children().val("");
+            }
+            </script>
+            <span id="buttons">
+              <button type="button" class="btn btn-primary" onclick="edit();">Edit</button>
+              <button type="button" class="btn btn-danger" style="float:right;" onclick="reset1();" disabled>Reset</button>
+              <button type="submit" class="btn btn-primary" style="float:right;" disabled>Submit</button>
+            </span>
+            </form>
+          </div>
+        </div>
+      </div>
+      <br>
+
+      <!--crew-->
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <a data-toggle="collapse" data-parent="#admin1" href="#crew1">
+            <h3>Crew Management</h3>
+          </a>
+        </div>
+        <div id="crew1" class="panel-collapse collapse">
+          <div class="panel-body">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addcrew">Add Crew Member</button><br><br>
+            <div id="addcrew" class="modal fade" role="dialog">
+          		<div class="modal-dialog">
+          		<div class="modal-content">
+            		<div class="modal-header">
+            			<button type="button" class="close" data-dismiss="modal">&times;</button>
+            			<h4 class="modal-title">Add new</h4>
+            		</div>
+                  <div class="modal-body">
+                    <form action="/acc/add" method="POST">
+                      Crew_id:<br>
+                      <input type="text" class="form-control" name="id" readonly><br>
+                      Name:<br>
+                      <input type="text" class="form-control" name="name" required><br>
+                      Username:<br>
+                      <input type="text" class="form-control" name="username" required><br>
+                      <script>
+                      function verify(){
+                        var password=$("#pass").val();
+                        var cpass=$("#cpass").val();
+                        if(cpass!=password){
+                          $("#cpass").css("border-color","red");
+                          $("#submit").attr("disabled",true);
+                        }else{
+                          $("#cpass").css("border-color","green");
+                          $("#submit").attr("disabled",false);
+                        }
+                      }
+                      </script>
+                      Password:<br>
+                      <input type="password" class="form-control" name="pass" id="pass" required><br>
+                      Confirm Password:<br>
+                      <input type="password" class="form-control" name="cpass" id="cpass" oninput="verify('this.val()');" required><br>
+                      Account type:<br>
+                      <select name="type" class="form-control">
+                        <option value="cashier">Cashier</option>
+                        <option value="kitchen">Kitchen</option>
+                      </select>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="submit">Add</button>
+                  </form>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <table class="table">
+              <tr>
+                <th>Crew_id</th>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Account Type</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+              <%
+              for(a=1;a<crew.length;a++){%>
+                <tr>
+                  <td><%=crew[a].crew_id%></td>
+                  <td><%=crew[a].name%></td>
+                  <td><%=crew[a].username%></td>
+                  <td><%=crew[a].account_type%></td>
+                  <td><%=crew[a].status%></td>
+                  <td><a href="#d<%=crew[a].crew_id%>" class="btn btn-danger" data-toggle="modal">Delete</a></td>
+                </tr>
+                <div id="d<%=crew[a].crew_id%>" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Delete <%=crew[a].username%>?</h4>
+                      </div>
+                      <form action="acc/delete" method="POST">
+                        <input type="hidden" name="id" value="<%=crew[a].crew_id%>">
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                      </form>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                      </div>
+                    </div>
+                  </div>
+                </div><%
+              }
+              %>
+            </table>
+          </div>
+        </div>
+      </div>
+      <br>
+    </div>
+  </div>
+</body>
+</html>

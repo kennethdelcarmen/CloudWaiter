@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>About Us</title>
+  <% include ../partials/head %>
+</head>
+<body>
+  <% include ../partials/u_header %>
+  <div class="container rounded">
+    <h1 id="about">About <%=resto.restaurant%></h1>
+    <p><%=resto.description%></p>
+    <br>
+
+    <h2 id="branches">Branches</h2>
+    <div id="blist"></div>
+    <script>
+      var branches="<%=resto.branches%>"
+      branches=branches.split(",");
+      blist="<ul>";
+
+      for(a=0;a<branches.length;a++){
+        blist+="<li>"+branches[a]+"</li>";
+      }
+      blist+="</ul>";
+      $("#blist").html(blist);
+    </script>
+    <br>
+
+    <h2>Contact <%=resto.restaurant%></h2>
+    <ul>
+      <li><a href="<%=resto.official_site%>" target="_blank"><%=resto.official_site%></a></li>
+      <li><a href="<%=resto.facebook_page%>" target="_blank">Facebook</a></li>
+      <li><a href="<%=resto.twitter_page%>" target="_blank">Twitter</a></li>
+    </ul>
+    <br>
+
+    <h1 id="devs">About Cloud Waiter</h1>
+    <p>Cloud Waiter is a web application that lets you order and track your payments on your personal device. Yey!!</p>
+    <br>
+    <h2>Behind Cloudwaiter</h2>
+    <h4>Developer</h4>
+    <p>Kenneth Del Carmen</p>
+    <br>
+
+    <h4>Layout Designer</h4>
+    <ul>
+      <li>Jake Mark Maala</li>
+      <li>Jade Devan Carillo</li>
+      <li>Camila Crispino</li>
+    </ul>
+    <br>
+
+    <h4>Documentors</h4>
+    <ul>
+      <li>Christian Alden Rowell Magalona</li>
+      <li>John Goeffrey Crobalde</li>
+    </ul>
+  </div>
+</body>
+</html>

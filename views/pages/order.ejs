@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Order</title>
+  <% include ../partials/head %>
+</head>
+<body>
+  <% include ../partials/u_header %>
+  <div class="container rounded" id="details">
+    <script>
+      var total=0;
+      var items=[];
+    </script>
+    <h4>Confirm</h4>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Food/Drinks</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Cost</th>
+        </tr>
+      </thead>
+      <%
+
+      if(data.length){
+        for(i=0;i<data.length;i++){%>
+          <tr>
+            <td><%=i+1%></td>
+            <td><%=data[i].name%></td>
+            <td><%=data[i].qty%></td>
+            <td>&#8369;<%=data[i].price%></td>
+            <td>&#8369;<%=(data[i].price*data[i].qty).toFixed(2)%></td>
+          </tr>
+          <script>
+            var c_item=(<%=data[i].price%>*<%=data[i].qty%>).toFixed(2);
+            total+=(<%=data[i].price%>*<%=data[i].qty%>);
+
+            items.push({
+              id:<%=data[i].item%>,
+              name:"<%=data[i].name%>",
+              qty:<%=data[i].qty%>,
+              c_item:c_item
+            });
+          </script>
+          <%
+        }
+      }%>
+      <tfoot>
+        <tr>
+          <td colspan="4" style="text-align:right; font-weight:bold;">Total:</td>
+          <td id ="total1">
+            <script>
+              total=total.toFixed(2);
+              $("#total1").html("&#8369;"+total);
+            </script>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+    <form action="/pay" method="POST">
+      <input type="hidden" id="payment" name="payment"><script>
+        $("#payment").val(JSON.stringify(items));
+      </script></input>
+      <input type="hidden" id="total2" name="total"><script>
+        $("#total2").val(total);
+      </script></input>
+
+      <button type="submit" class="btn btn-primary" style="width:100%;">Confirm</button>
+    </form>
+    <button type="button" class="btn btn-danger" onclick="window.location.href='/';" style="width:100%;">Cancel</button>
+  </div>
+  <% include ../partials/footer%>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Transact</title>
+  <% include ../partials/head %>
+</head>
+<body>
+  <% include ../partials/c_header %>
+  <script>
+    $(()=>{
+      $("#tabs").append("<li class='active'><a href='/cashier'>Cashier</a></li>");
+    });
+  </script>
+  <div class="container rounded" style="margin-top:6%;">
+    <h1>Transaction</h1>
+    <table class="table">
+        <tr>
+          <th>#</th>
+          <th>Food/Drinks</th>
+          <th>Quantity</th>
+          <th>Cost</th>
+        </tr>
+      <%
+
+      if(name.length){
+        for(i=0;i<name.length;i++){%>
+          <tr>
+            <td><%=i+1%></td>
+            <td><%=name[i]%></td>
+            <td><%=qty[i]%></td>
+            <td>&#8369;<%=cost[i]%></td>
+          </tr>
+          <%
+        }
+      }%>
+        <tr>
+          <td colspan="3">Total:</td>
+          <td>&#8369;<%=(payment[0].cost).toFixed(2)%></td>
+        </tr>
+        <tr>
+          <script>
+            function change(){
+              var cash=document.getElementById('cash').value;
+              var change=(cash-<%=payment[0].cost%>).toFixed(2);
+              var trans={
+                id:<%=payment[0].payment_id%>,
+                cash:cash,
+                change:change
+              };
+              document.getElementById("change").value=change;
+              document.getElementById("trans").value=JSON.stringify(trans);
+              if(change>=0){
+                document.getElementById("submit").disabled=false;
+              }else{
+                document.getElementById("submit").disabled=true;
+              }
+            }
+          </script>
+          <td colspan="3">Cash</td>
+          <td>
+            <div class="input-group">
+              <span class="input-group-addon">&#8369;</span>
+              <input type="text" class="form-control" id="cash" oninput="change();">
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">Change</td>
+          <td>
+            <div class="input-group">
+              <span class="input-group-addon">&#8369;</span>
+              <input type="text" class="form-control" id="change" readonly>
+            </div>
+          </td>
+        </tr>
+    </table>
+    <form action="/transact" method="POST">
+      <input type="hidden" name="trans" id="trans">
+      <button type="submit" class="btn btn-primary" style="width:100%;" id="submit" disabled>Add Transaction</button>
+      <button type="button" class="btn btn-danger" style="width:100%;" onclick="window.close();">Cancel</button>
+    </form>
+  </div>
+</body>
+</html>

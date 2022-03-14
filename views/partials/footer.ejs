@@ -1,0 +1,44 @@
+<br>
+<div class="wrapper row4">
+  <div class="rounded">
+    <footer id="footer" class="clear">
+      <div class="one_third first" style="text-align:center;">
+        <center>
+        <figure style="width:40%;"><img class="btmspace-15" src="images/frame.png" width="6%" alt="">
+
+        </figure>
+        <h2><%=resto.restaurant%></h2>
+      </div>
+      <div class="one_third">
+        <h4 id="branches">Branches</h4>
+        <div id="blist"></div>
+        <script>
+          var branches="<%=resto.branches%>"
+          branches=branches.split(",");
+          blist="<ul>";
+
+          for(a=0;a<branches.length;a++){
+            blist+="<li>"+branches[a]+"</li>";
+          }
+          blist+="</ul>";
+          $("#blist").html(blist);
+        </script>
+
+
+      </div>
+      <div class="one_third">
+        <h4 class="nospace btmspace-10">Contact Us</h4>
+        <ul>
+          <li><a href="<%=resto.official_site%>" target="_blank"><%=resto.official_site%></a></li>
+          <li><a href="<%=resto.facebook_page%>" target="_blank"><%=resto.facebook_page%></a></li>
+          <li><a href="<%=resto.twitter_page%>" target="_blank"><%=resto.twitter_page%></a></li>
+        </ul>
+        <!--<ul class="faico clear">
+          <li><a class="faicon-facebook" href="https://www.facebook.com/CSHSB.Official/" target="_blank"><i class="fa fa-facebook"></i></a></li>
+        </ul>-->
+        <br>
+
+        <h4><a href="/about#devs"> About the Developers>></a></h4>
+
+    </footer>
+  </div>

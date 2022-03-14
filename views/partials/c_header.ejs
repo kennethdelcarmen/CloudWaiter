@@ -1,0 +1,86 @@
+<script>
+  $(()=>{
+    const socket=io();
+    socket.on('reload',()=>{
+      location.reload();
+    });
+  });
+</script>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#"><%=resto.restaurant%></a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav" id="tabs">
+
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" data-toggle="modal" data-target="#editacc">Edit My Account</a></li>
+        <li><a href="#" data-toggle="modal" data-target="#alogout">Logout</a></li>
+
+      </ul>
+    </div>
+  </div>
+</nav>
+<div id="alogout" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Logout?</h4>
+      </div>
+      <div class="modal-footer">
+        <a href="/adminlogout" class="btn btn-primary">Yes</a>
+      </form>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="editacc" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Edit Account</h4>
+      </div>
+      <div class="modal-body">
+        <script>
+        function everify(){
+          var password=$("#epass").val();
+          var cpass=$("#ecpass").val();
+          if(cpass==password){
+            $("#ecpass").css("border-color","inherit");
+            $("#esubmit").attr("disabled",false);
+          }else{
+            $("#ecpass").css("border-color","red");
+            $("#esubmit").attr("disabled",true);
+          }
+        }
+        </script>
+        <form action="/acc/edit" method="POST">
+          Name:<br>
+          <input type="text" class="form-control" name="name" value="" required><br>
+          Username:<br>
+          <input type="text" class="form-control" name="username" required><br>
+          <hr>
+          Password:<br>
+          <input type="password" class="form-control" name="pass" id="epass" required><br>
+          Confirm Password:<br>
+          <input type="password" class="form-control" name="cpass" id="ecpass" oninput="everify();" required><br>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" id="esubmit" class="btn btn-primary">Confirm</button>
+      </form>
+        <button type="reset" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

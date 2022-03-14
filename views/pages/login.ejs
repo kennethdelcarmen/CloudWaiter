@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <% include ../partials/head %>
+  <script>
+    $(()=>{
+      const socket=io();
+      socket.on('vacate',()=>{
+        location.reload();
+      });
+    });
+  </script>
+</head>
+<body>
+  <nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+      </div>
+    </div>
+  </nav>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Cloud Waiter</a>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/adminlogin" target="_blank">Crew Login</a></li>
+          <li><a href="/about" target="_blank">House Stark</a></li>
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+      <div class="jumbotron">
+        <div class="container">
+        <h1>Cloud Waiter</h1>
+        <p>Cloud Waiter is a web application that lets you order and track your payments on your personal device. Yey!!</p>
+        <center id="container">
+          <div style="background-color:white; width:75%;">
+            <img id="qr" src="#" width="100%">
+          </div>
+
+          <input type="file" id="qrinput" accept="image/*" capture="camera" style="display:none;">
+        <label for="qrinput" class="btn btn-primary" id="capture" style="width:50%;">Capture</label>
+      </center>
+      <form id="login" action="/login" method="POST">
+        <input type="text" id="table" name="table" hidden>
+        <center>
+          <div id="form"></div>
+          <div id="err">
+            <%
+            if(err!=""){%>
+              <div class='alert alert-danger alert-dismissible'>
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <%=err%>
+              </div><%
+            }%>
+          </div>
+        </center>
+      </form>
+      </div>
+      </div>
+
+      <script>
+      function readURL(input) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            $('#qr').attr('src', e.target.result);
+          }
+
+          reader.readAsDataURL(input.files[0]);
+        }
+       }
+
+       $("#qrinput").change(function(){
+           readURL(this);
+           $("#capture").remove();
+           $("#container").append("<a href='#qrinput' id='decode' class='btn btn-primary' onclick='scan();' style='width:50%;'>Decode!</a>");
+       });
+
+      var qr = new QCodeDecoder();
+
+        if (!(qr.isCanvasSupported() && qr.hasGetUserMedia())) {
+          alert('Your browser doesn\'t match the required specs.');
+          throw new Error('Canvas and getUserMedia are required');
+        }
+
+        var btn = document.querySelector('button#decode');
+        var img = document.querySelector('#qr');
+        var once=false;
+
+        function scan() {
+          qr.decodeFromImage(img, function (err, result) {
+            if (!err){
+              if(once==false){
+                $("#table").val(result);
+                $("#form").append("<button type='submit' class='btn btn-primary' style='width:50%'>Login</button");
+                once=true;
+              }
+            }else{
+              $("#err").append("<div class='alert alert-danger alert-dismissible'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>Decoding Error. Please make sure the code is parallel to the camera</div>");
+              $("#decode").remove();
+              $("#container").append("<label for='qrinput' class='btn btn-primary' id='capture' style='width:50%;'>Capture</label>")
+            }
+          });
+        }
+      </script>
+  </div>
+  <div class="wrapper row4">
+    <div class="rounded">
+      <footer id="footer" class="clear">
+        <div class="one_third first">
+          <figure class="center"><img class="btmspace-15" src="images/house_stark.png" width="50%" alt="">
+            <h2>Hello World</h2>
+          </figure>
+        </div>
+        <div class="one_third">
+          <h4>Developer</h4>
+          <p>Kenneth Del Carmen</p>
+          <h4>Documentors</h4>
+          <p>Christian Magalona</p>
+          <p>Jake Maala</p>
+          <p>Goeffrey Crobalde</p>
+          <p>Jade Carillo</p>
+          <p>Camila Crispino</p>
+          <p>Elezaldy Calingacion</p>
+
+
+        </div>
+        <div class="one_third">
+          <p class="nospace btmspace-10">Contact Us</p>
+          <ul class="faico clear">
+            <li><a class="faicon-facebook" href="https://www.facebook.com/CSHSB.Official/" target="_blank"><i class="fa fa-facebook"></i></a></li>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home</title>
+  <% include ../partials/head %>
+  <script>
+    var status23=[];
+    $(()=>{
+      const socket=io();
+      socket.on('paid',()=>{
+        location.reload();
+      });
+
+      $("#checkout").submit(()=>{
+        $("#checkbtn").attr("class","btn btn-success");
+        socket.emit('checkout',"<%=customer%>");
+        return false;
+      });
+    });
+  </script>
+</head>
+<body>
+  <% include ../partials/u_header %>
+  <div class="container rounded">
+    <h1 id="orders">My Orders</h1>
+
+    <%
+    if(payment.length){
+      for(a=0;a<payment.length;a++){
+        %>
+        <div class="panel-group">
+         <div class="panel panel-default">
+           <div class="panel-heading">
+             <a data-toggle="collapse" data-target="#item<%=payment[a].payment_id%>">
+               <div class="row">
+                 <div class="col-xs-2"><%=a+1%></div>
+                 <div class="col-xs-5">Status: <%=payment[a].status%></div>
+                 <div class="col-xs-5"><strong>Total: &#8369;<%=payment[a].cost%></strong></div>
+               </div>
+             </a>
+           </div>
+           <%
+           if(payment[a].status=='PENDING'){
+             %>
+             <div id="item<%=payment[a].payment_id%>" class="panel-collapse collapse in">
+               <%
+           }else{
+             %>
+             <div id="item<%=payment[a].payment_id%>" class="panel-collapse collapse">
+               <%
+           }%>
+
+             <div class="panel-body">
+               <table class="table">
+                 <tr>
+                   <th>Food/Drinks</th>
+                   <th>Quantity</th>
+                   <th>Cost</th>
+                 </tr>
+                 <%
+                 var test=typeof items.name[a];
+                 if(test!="string"){
+                   for(b=0;b<items.name[a].length;b++){%>
+                   <tr>
+                     <td><%=items.name[a][b]%></td>
+                     <td><%=items.qty[a][b]%></td>
+                     <td>&#8369;<%=items.cost[a][b]%></td>
+                   </tr><%
+                   }
+                 }else{%>
+                   <tr>
+                     <td><%=items.name[a]%></td>
+                     <td><%=items.qty[a]%></td>
+                     <td>&#8369;<%=items.cost[a]%></td>
+                   </tr><%
+                 }
+              %>
+               </table>
+             </div>
+           </div>
+         </div>
+       </div>
+       <script>
+       status23.push("<%=payment[a].status%>");
+      </script><%
+      }
+    }%>
+    <script>
+    $(()=>{
+      var disable=status23.indexOf("PENDING");
+      if(disable==-1){
+        $("#again").addClass("btn btn-primary");
+        $("#homelink").attr("href","/");
+        $("#checkbtn").attr("disabled", true);
+      }else{
+        $("#again").addClass("btn btn-primary disabled");
+        $("#checkbtn").attr("disabled", false);
+        $("a").attr('href',"#orders");
+        $("a").attr('target',"_self");
+      }
+    });
+    </script>
+    <form id="checkout">
+      <button type="submit" id="checkbtn" style="width:100%" class="btn btn-primary">Check Out</button>
+    </form>
+    <a href="/#menu" style="width:100%" id="again">Order Again</a>
+  </div>
+  <% include ../partials/footer%>
+</body>
+</html>

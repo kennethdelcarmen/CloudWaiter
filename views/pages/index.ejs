@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cloud Waiter</title>
+  <% include ../partials/head %>
+  <style>
+    .well{
+      text-align:center;
+      color:black;
+      font-weight: 1000;
+    }
+  </style>
+</head>
+<body>
+  <% include ../partials/u_header %>
+  <script>
+    $(()=>{
+      $("#ordertab").remove();
+      if("<%=customer[0].payment_id%>"!=""){
+        $("#home").after("<li><a id='ordertab' href='/orders#orders'>My Orders</a></li>");
+      }else{
+        $("#home").after("<li><a>My Orders</a></li>");
+      }
+
+    });
+
+    function accordion(id){
+      $(id).siblings(".collapse").collapse("hide");
+    }
+  </script>
+  <div class="container rounded">
+    <script>
+      var orders=[];
+    </script>
+    <h1 id="menu">Menu</h1>
+    <div id="menu1">
+      <a href="#burgers" data-parent="#menu1" data-toggle="collapse" onclick="accordion(burgers);"><div class="well well-lg">Burgers</div></a>
+      <div id="burgers" class="collapse" style="margin-left:1em;">
+        <table class="table">
+          <tr>
+            <th>Burgers</th>
+            <th>Price</th>
+            <th colspan="2">Quantity</th>
+          </tr>
+
+          <%
+          if(burgers.length){
+            for(i=0;i<burgers.length;i++){%>
+
+              <tr id="<%=burgers[i].item_id%>">
+                <td><%=burgers[i].name%></td>
+                <td>&#8369;<%=burgers[i].price%></td>
+                <td style="width:5em;">
+                  <input type="number" class="form-control" id="qty<%=burgers[i].item_id%>" value="0" min="0">
+
+                </td>
+                <td id="add<%=burgers[i].item_id%>">
+                  <a class="btn btn-primary" onclick="order<%=burgers[i].item_id%>();">+</a>
+                </td>
+                <script>
+                function order<%=burgers[i].item_id%>(){
+                  $("#add<%=burgers[i].item_id%>").remove();
+                  $("#<%=burgers[i].item_id%>").append("<td id='remove<%=burgers[i].item_id%>'><a class='btn btn-danger' onclick='remove<%=burgers[i].item_id%>();'>X</a></td>");
+                  var qty=parseInt($("#qty<%=burgers[i].item_id%>").val());
+                  if(qty==0){
+                    qty=1;
+                  }
+                  orders.push({
+                    item:<%=burgers[i].item_id%>,
+                    name:'<%=burgers[i].name%>',
+                    price:<%=burgers[i].price%>,
+                    qty:qty
+                  });
+                  $("#orders").val(JSON.stringify(orders));
+                  $("#button").attr("disabled",false);
+                  $("#qty<%=burgers[i].item_id%>").val(qty);
+                  $("#qty<%=burgers[i].item_id%>").attr("readonly",true);
+                }
+
+                function remove<%=burgers[i].item_id%>(){
+                  $("#remove<%=burgers[i].item_id%>").remove();
+                  $("#<%=burgers[i].item_id%>").append("<td id='add<%=burgers[i].item_id%>'><a class='btn btn-primary' onclick='order<%=burgers[i].item_id%>();'>+</a></td>");
+                  var item=orders.map(b=>b.item);
+                  var index=item.indexOf(<%=burgers[i].item_id%>);
+                  orders.splice(index,1);
+                  if(orders==""){
+                    $("#button").attr("disabled",true);
+                  }else{
+                    $("#button").attr("disabled",false);
+                  }
+                  $("#orders").val(JSON.stringify(orders));
+                  $("#qty<%=burgers[i].item_id%>").val(0);
+                  $("#qty<%=burgers[i].item_id%>").attr("readonly",false);
+                }
+                </script>
+              </tr>
+              <%
+            }
+          }%>
+        </table>
+      </div>
+
+      <a href="#chicken" data-parent="#menu1" data-toggle="collapse" onclick="accordion(chicken);"><div class="well well-lg">Chicken Wings</div></a>
+      <div id="chicken" class="collapse" style="margin-left:1em;">
+        <table class="table">
+          <tr>
+            <th>Chicken Wings</th>
+            <th>Price</th>
+            <th colspan="2">Quantity</th>
+          </tr>
+
+          <%
+          if(chicken.length){
+            for(i=0;i<chicken.length;i++){%>
+
+              <tr id="<%=chicken[i].item_id%>">
+                <td><%=chicken[i].name%></td>
+                <td>&#8369;<%=chicken[i].price%></td>
+                <td style="width:5em;">
+                  <input type="number" class="form-control" id="qty<%=chicken[i].item_id%>" value="0" min="0">
+
+                </td>
+                <td id="add<%=chicken[i].item_id%>">
+                  <a class="btn btn-primary" onclick="order<%=chicken[i].item_id%>();">+</a>
+                </td>
+                <script>
+                function order<%=chicken[i].item_id%>(){
+                  $("#add<%=chicken[i].item_id%>").remove();
+                  $("#<%=chicken[i].item_id%>").append("<td id='remove<%=chicken[i].item_id%>'><a class='btn btn-danger' onclick='remove<%=chicken[i].item_id%>();'>X</a></td>");
+                  var qty=parseInt($("#qty<%=chicken[i].item_id%>").val());
+                  if(qty==0){
+                    qty=1;
+                  }
+                  orders.push({
+                    item:<%=chicken[i].item_id%>,
+                    name:'<%=chicken[i].name%>',
+                    price:<%=chicken[i].price%>,
+                    qty:qty
+                  });
+                  $("#orders").val(JSON.stringify(orders));
+                  $("#button").attr("disabled",false);
+                  $("#qty<%=chicken[i].item_id%>").val(qty);
+                  $("#qty<%=chicken[i].item_id%>").attr("readonly",true);
+                }
+
+                function remove<%=chicken[i].item_id%>(){
+                  $("#remove<%=chicken[i].item_id%>").remove();
+                  $("#<%=chicken[i].item_id%>").append("<td id='add<%=chicken[i].item_id%>'><a class='btn btn-primary' onclick='order<%=chicken[i].item_id%>();'>+</a></td>");
+                  var item=orders.map(b=>b.item);
+                  var index=item.indexOf(<%=chicken[i].item_id%>);
+                  orders.splice(index,1);
+                  if(orders==""){
+                    $("#button").attr("disabled",true);
+                  }else{
+                    $("#button").attr("disabled",false);
+                  }
+                  $("#orders").val(JSON.stringify(orders));
+                  $("#qty<%=chicken[i].item_id%>").val(0);
+                  $("#qty<%=chicken[i].item_id%>").attr("readonly",false);
+                }
+                </script>
+              </tr>
+              <%
+            }
+          }%>
+        </table>
+      </div>
+
+      <a href="#rice" data-parent="#menu1" data-toggle="collapse" onclick="accordion(rice);"><div class="well well-lg">Rice Meals</div></a>
+      <div id="rice" class="collapse" style="margin-left:1em;">
+        <table class="table">
+          <tr>
+            <th>Rice Meals</th>
+            <th>Price</th>
+            <th colspan="2">Quantity</th>
+          </tr>
+
+          <%
+          if(rice.length){
+            for(i=0;i<rice.length;i++){%>
+
+              <tr id="<%=rice[i].item_id%>">
+                <td><%=rice[i].name%></td>
+                <td>&#8369;<%=rice[i].price%></td>
+                <td style="width:5em;">
+                  <input type="number" class="form-control" id="qty<%=rice[i].item_id%>" value="0" min="0">
+
+                </td>
+                <td id="add<%=rice[i].item_id%>">
+                  <a class="btn btn-primary" onclick="order<%=rice[i].item_id%>();">+</a>
+                </td>
+                <script>
+                function order<%=rice[i].item_id%>(){
+                  $("#add<%=rice[i].item_id%>").remove();
+                  $("#<%=rice[i].item_id%>").append("<td id='remove<%=rice[i].item_id%>'><a class='btn btn-danger' onclick='remove<%=rice[i].item_id%>();'>X</a></td>");
+                  var qty=parseInt($("#qty<%=rice[i].item_id%>").val());
+                  if(qty==0){
+                    qty=1;
+                  }
+                  orders.push({
+                    item:<%=rice[i].item_id%>,
+                    name:'<%=rice[i].name%>',
+                    price:<%=rice[i].price%>,
+                    qty:qty
+                  });
+                  $("#orders").val(JSON.stringify(orders));
+                  $("#button").attr("disabled",false);
+                  $("#qty<%=rice[i].item_id%>").val(qty);
+                  $("#qty<%=rice[i].item_id%>").attr("readonly",true);
+                }
+
+                function remove<%=rice[i].item_id%>(){
+                  $("#remove<%=rice[i].item_id%>").remove();
+                  $("#<%=rice[i].item_id%>").append("<td id='add<%=rice[i].item_id%>'><a class='btn btn-primary' onclick='order<%=rice[i].item_id%>();'>+</a></td>");
+                  var item=orders.map(b=>b.item);
+                  var index=item.indexOf(<%=rice[i].item_id%>);
+                  orders.splice(index,1);
+                  if(orders==""){
+                    $("#button").attr("disabled",true);
+                  }else{
+                    $("#button").attr("disabled",false);
+                  }
+                  $("#orders").val(JSON.stringify(orders));
+                  $("#qty<%=rice[i].item_id%>").val(0);
+                  $("#qty<%=rice[i].item_id%>").attr("readonly",false);
+                }
+                </script>
+              </tr>
+              <%
+            }
+          }%>
+        </table>
+      </div>
+
+      <a href="#sides" data-parent="#menu1" data-toggle="collapse" onclick="accordion(sides);"><div class="well well-lg">Sides</div></a>
+      <div id="sides" class="collapse" style="margin-left:1em;">
+        <table class="table">
+          <tr>
+            <th>Sides</th>
+            <th>Price</th>
+            <th colspan="2">Quantity</th>
+          </tr>
+
+          <%
+          if(sides.length){
+            for(i=0;i<sides.length;i++){%>
+
+              <tr id="<%=sides[i].item_id%>">
+                <td><%=sides[i].name%></td>
+                <td>&#8369;<%=sides[i].price%></td>
+                <td style="width:5em;">
+                  <input type="number" class="form-control" id="qty<%=sides[i].item_id%>" value="0" min="0">
+
+                </td>
+                <td id="add<%=sides[i].item_id%>">
+                  <a class="btn btn-primary" onclick="order<%=sides[i].item_id%>();">+</a>
+                </td>
+                <script>
+                function order<%=sides[i].item_id%>(){
+                  $("#add<%=sides[i].item_id%>").remove();
+                  $("#<%=sides[i].item_id%>").append("<td id='remove<%=sides[i].item_id%>'><a class='btn btn-danger' onclick='remove<%=sides[i].item_id%>();'>X</a></td>");
+                  var qty=parseInt($("#qty<%=sides[i].item_id%>").val());
+                  if(qty==0){
+                    qty=1;
+                  }
+                  orders.push({
+                    item:<%=sides[i].item_id%>,
+                    name:'<%=sides[i].name%>',
+                    price:<%=sides[i].price%>,
+                    qty:qty
+                  });
+                  $("#orders").val(JSON.stringify(orders));
+                  $("#button").attr("disabled",false);
+                  $("#qty<%=sides[i].item_id%>").val(qty);
+                  $("#qty<%=sides[i].item_id%>").attr("readonly",true);
+                }
+
+                function remove<%=sides[i].item_id%>(){
+                  $("#remove<%=sides[i].item_id%>").remove();
+                  $("#<%=sides[i].item_id%>").append("<td id='add<%=sides[i].item_id%>'><a class='btn btn-primary' onclick='order<%=sides[i].item_id%>();'>+</a></td>");
+                  var item=orders.map(b=>b.item);
+                  var index=item.indexOf(<%=sides[i].item_id%>);
+                  orders.splice(index,1);
+                  if(orders==""){
+                    $("#button").attr("disabled",true);
+                  }else{
+                    $("#button").attr("disabled",false);
+                  }
+                  $("#orders").val(JSON.stringify(orders));
+                  $("#qty<%=sides[i].item_id%>").val(0);
+                  $("#qty<%=sides[i].item_id%>").attr("readonly",false);
+                }
+                </script>
+              </tr>
+              <%
+            }
+          }%>
+        </table>
+      </div>
+
+      <a href="#extras" data-parent="#menu1" data-toggle="collapse" onclick="accordion(extras);"><div class="well well-lg">Extras</div></a>
+      <div id="extras" class="collapse" style="margin-left:1em;">
+        <table class="table">
+          <tr>
+            <th>Extras</th>
+            <th>Price</th>
+            <th colspan="2">Quantity</th>
+          </tr>
+
+          <%
+          if(extras.length){
+            for(i=0;i<extras.length;i++){%>
+
+              <tr id="<%=extras[i].item_id%>">
+                <td><%=extras[i].name%></td>
+                <td>&#8369;<%=extras[i].price%></td>
+                <td style="width:5em;">
+                  <input type="number" class="form-control" id="qty<%=extras[i].item_id%>" value="0" min="0">
+
+                </td>
+                <td id="add<%=extras[i].item_id%>">
+                  <a class="btn btn-primary" onclick="order<%=extras[i].item_id%>();">+</a>
+                </td>
+                <script>
+                function order<%=extras[i].item_id%>(){
+                  $("#add<%=extras[i].item_id%>").remove();
+                  $("#<%=extras[i].item_id%>").append("<td id='remove<%=extras[i].item_id%>'><a class='btn btn-danger' onclick='remove<%=extras[i].item_id%>();'>X</a></td>");
+                  var qty=parseInt($("#qty<%=extras[i].item_id%>").val());
+                  if(qty==0){
+                    qty=1;
+                  }
+                  orders.push({
+                    item:<%=extras[i].item_id%>,
+                    name:'<%=extras[i].name%>',
+                    price:<%=extras[i].price%>,
+                    qty:qty
+                  });
+                  $("#orders").val(JSON.stringify(orders));
+                  $("#button").attr("disabled",false);
+                  $("#qty<%=extras[i].item_id%>").val(qty);
+                  $("#qty<%=extras[i].item_id%>").attr("readonly",true);
+                }
+
+                function remove<%=extras[i].item_id%>(){
+                  $("#remove<%=extras[i].item_id%>").remove();
+                  $("#<%=extras[i].item_id%>").append("<td id='add<%=extras[i].item_id%>'><a class='btn btn-primary' onclick='order<%=extras[i].item_id%>();'>+</a></td>");
+                  var item=orders.map(b=>b.item);
+                  var index=item.indexOf(<%=extras[i].item_id%>);
+                  orders.splice(index,1);
+                  if(orders==""){
+                    $("#button").attr("disabled",true);
+                  }else{
+                    $("#button").attr("disabled",false);
+                  }
+                  $("#orders").val(JSON.stringify(orders));
+                  $("#qty<%=extras[i].item_id%>").val(0);
+                  $("#qty<%=extras[i].item_id%>").attr("readonly",false);
+                }
+                </script>
+              </tr>
+              <%
+            }
+          }%>
+        </table>
+      </div>
+
+      <a href="#drinks" data-parent="#menu1" data-toggle="collapse" onclick="accordion(drinks);"><div class="well well-lg">Drinks</div></a>
+      <div id="drinks" class="collapse" style="margin-left:1em;">
+        <table class="table">
+          <tr>
+            <th>Drinks</th>
+            <th>Price</th>
+            <th colspan="2">Quantity</th>
+          </tr>
+
+          <%
+          if(drinks.length){
+            for(i=0;i<drinks.length;i++){%>
+
+              <tr id="<%=drinks[i].item_id%>">
+                <td><%=drinks[i].name%></td>
+                <td>&#8369;<%=drinks[i].price%></td>
+                <td style="width:5em;">
+                  <input type="number" class="form-control" id="qty<%=drinks[i].item_id%>" value="0" min="0">
+                </td>
+                <td id="add<%=drinks[i].item_id%>">
+                  <a class="btn btn-primary" onclick="order<%=drinks[i].item_id%>();">+</a>
+                </td>
+                <script>
+                function order<%=drinks[i].item_id%>(){
+                  $("#add<%=drinks[i].item_id%>").remove();
+                  $("#<%=drinks[i].item_id%>").append("<td id='remove<%=drinks[i].item_id%>'><a class='btn btn-danger' onclick='remove<%=drinks[i].item_id%>();'>X</a></td>");
+                  var qty=parseInt($("#qty<%=drinks[i].item_id%>").val());
+                  if(qty==0){
+                    qty=1;
+                  }
+                  orders.push({
+                    item:<%=drinks[i].item_id%>,
+                    name:'<%=drinks[i].name%>',
+                    price:<%=drinks[i].price%>,
+                    qty:qty
+                  });
+                  $("#orders").val(JSON.stringify(orders));
+                  $("#button").attr("disabled",false);
+                  $("#qty<%=drinks[i].item_id%>").val(qty);
+                  $("#qty<%=drinks[i].item_id%>").attr("readonly",true);
+                }
+
+                function remove<%=drinks[i].item_id%>(){
+                  $("#remove<%=drinks[i].item_id%>").remove();
+                  $("#<%=drinks[i].item_id%>").append("<td id='add<%=drinks[i].item_id%>'><a class='btn btn-primary' onclick='order<%=drinks[i].item_id%>();'>+</a></td>");
+                  var item=orders.map(b=>b.item);
+                  var index=item.indexOf(<%=drinks[i].item_id%>);
+                  orders.splice(index,1);
+                  if(orders==""){
+                    $("#button").attr("disabled",true);
+                  }else{
+                    $("#button").attr("disabled",false);
+                  }
+                  $("#orders").val(JSON.stringify(orders));
+                  $("#qty<%=drinks[i].item_id%>").val(0);
+                  $("#qty<%=drinks[i].item_id%>").attr("readonly",false);
+                }
+                </script>
+              </tr>
+              <%
+            }
+          }%>
+        </table>
+      </div>
+    </div>
+
+
+    <form action="/order#details" method="POST">
+      <input type="hidden" id="orders" name="order">
+      <button type="submit" class="btn btn-primary" style="width:100%;" id="button" disabled>Order</button>
+      <button type="reset" class="btn btn-danger" style="width:100%;" onclick="location.reload();">Reset</button>
+    </form>
+  </div>
+  <% include ../partials/footer%>
+</body>
+</html>

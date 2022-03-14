@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kitchen</title>
+  <% include ../partials/head %>
+</head>
+<body>
+  <% include ../partials/c_header %>
+  <script>
+    $(()=>{
+      $("#tabs").append("<li class='active'><a href='/kitchen'>Kitchen</a></li>");
+    });
+  </script>
+  <div class="container" style="margin-top:6%;">
+    <h3>Orders</h3>
+    <h4><%=today%></h4>
+    <%
+    if(orders.length){
+      for(a=0;a<orders.length;a++){
+        if(today==order_dates[a]){
+          %>
+          <div class="panel-group">
+          <%
+          if(orders[a].status=='Pending'){%>
+            <div class="panel panel-primary" style="color:white;"><%
+          }else{%>
+            <div class="panel panel-success"><%
+          }%>
+             <div class="panel-heading">
+               <a data-toggle="collapse" href="#item<%=orders[a].order_id%>">
+                 <div class="row">
+                   <div class="col-xs-4">Order_id: <%=orders[a].order_id%></div>
+                   <div class="col-xs-3">Status: <%=orders[a].status%></div>
+                   <div class="col-xs-3">Table: <%=orders[a].table_no%></div>
+                   <div class="col-xs-2">
+                     <a href="/ready?id=<%=orders[a].order_id%>" id="a<%=orders[a].order_id%>" class="btn btn-success">Ready</a>
+                   </div>
+                   <script>
+                   $(()=>{
+                     if("<%=orders[a].status%>"=="Ready"){
+                       $("#a<%=orders[a].order_id%>").attr("class","btn btn-success disabled");
+                     }
+                   });
+                   </script>
+                 </div>
+               </a>
+             </div>
+             <%
+             if(orders[a].status=='Pending'){
+               %>
+               <div id="item<%=orders[a].order_id%>" class="panel-collapse collapse in">
+                 <%
+             }else{
+               %>
+               <div id="item<%=orders[a].order_id%>" class="panel-collapse collapse">
+                 <%
+             }%>
+
+               <div class="panel-body">
+                 <table class="table">
+                   <tr>
+                     <th>Food/Drinks</th>
+                     <th>Quantity</th>
+                   </tr>
+                   <%
+                   for(b=0;b<payment.length;b++){
+                     if(orders[a].payment_id==payment[b].payment_id){
+                       payment[b].item_name=payment[b].item_name.split(",");
+                       payment[b].item_qty=payment[b].item_qty.split(",");
+                       var test=typeof payment[b].item_name;
+                       if(test!="string"){
+                         for(c=0;c<payment[b].item_name.length;c++){
+                           %>
+                           <tr>
+                             <td><%=payment[b].item_name[c]%></td>
+                             <td><%=payment[b].item_qty[c]%></td>
+                           </tr>
+                           <%
+                         }
+                       }else{
+                         %>
+                         <tr>
+                           <td><%=payment[b].item_name%></td>
+                           <td><%=payment[b].item_qty%></td>
+                         </tr>
+                         <%
+                       }
+
+                     }
+                   }%>
+                 </table>
+               </div>
+             </div>
+           </div>
+         </div>
+          <%
+        }
+      }
+    }
+     %>
+  </div>
+</body>
+</html>
